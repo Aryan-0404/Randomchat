@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteChat - Premium Random Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <h1>EliteChat</h1>
+            <p>Premium Anonymous Chat</p>
+            <input type="text" id="username" placeholder="Enter your name">
+            <select id="gender">
+                <option value="male">♂ Male</option>
+                <option value="female">♀ Female</option>
+            </select>
+            <button id="startChat">Start Chat</button>
+        </div>
+
+        <!-- Chat Screen -->
+        <div class="chat-screen hidden" id="chatScreen">
+            <div class="chat-header">
+                <h2>Chatting with <span id="partnerName">...</span></h2>
+                <button id="newChat">New Chat</button>
+            </div>
+            <div class="chat-box" id="chatBox"></div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off">
+                <input type="file" id="imageInput" accept="image/*">
+                <button id="sendMessage">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
