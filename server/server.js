@@ -7,7 +7,10 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    maxHttpBufferSize: 5 * 1024 * 1024 // 5 MB
+});
+
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
