@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-    maxHttpBufferSize: 5 * 1024 * 1024 // 5 MB
+    maxHttpBufferSize: 5e6 // 5 MB
 });
 
 
@@ -59,9 +59,10 @@ io.on('connection', (socket) => {
     socket.on('sendImage', (data) => {
         const partnerSocketId = engagedUsers[socket.id];
         if (partnerSocketId && users[partnerSocketId]) {
-            io.to(partnerSocketId).emit('receiveImage', { from: users[socket.id].username, image: data.image });
-        }
-    });
+            io.to(partnerSocketId).emit('receiveImage', {
+                from: users[socket.id].username,
+                image: data.image, // Base64-encoded image
+            });
 
     socket.on('disconnect', () => {
         console.log(`❌ User disconnected: ${socket.id}`);
