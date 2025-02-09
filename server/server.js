@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-    maxHttpBufferSize: 20 * 1024 * 1024 // 5 MB
+    maxHttpBufferSize: 10e6 // 5 MB
 });
 
 
