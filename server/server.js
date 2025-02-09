@@ -8,9 +8,8 @@ require('dotenv').config();
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
-    maxHttpBufferSize: 10e6 // 5 MB
+    maxHttpBufferSize: 10e6 // 10 MB
 });
-
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {
@@ -40,8 +39,7 @@ io.on('connection', (socket) => {
     socket.on('join', (data) => {
         users[socket.id] = { username: data.username, gender: data.gender, socketId: socket.id };
         console.log(`${data.username} joined as ${data.gender}`);
-
-        matchUser(socket.id); // Try matching immediately
+        matchUser(socket.id);
     });
 
     socket.on('newChat', () => {
@@ -63,6 +61,8 @@ io.on('connection', (socket) => {
                 from: users[socket.id].username,
                 image: data.image, // Base64-encoded image
             });
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log(`❌ User disconnected: ${socket.id}`);
@@ -79,17 +79,14 @@ function matchUser(socketId) {
     const availablePartner = findAvailablePartner(currentUser.gender);
 
     if (availablePartner) {
-        // Pair them up
         engagedUsers[socketId] = availablePartner.socketId;
         engagedUsers[availablePartner.socketId] = socketId;
 
         io.to(socketId).emit('partnerFound', { username: availablePartner.username, socketId: availablePartner.socketId });
         io.to(availablePartner.socketId).emit('partnerFound', { username: currentUser.username, socketId });
 
-        // Remove from waiting list
         waitingUsers = waitingUsers.filter(id => id !== socketId && id !== availablePartner.socketId);
     } else {
-        // No partner available, add to waiting queue
         if (!waitingUsers.includes(socketId)) {
             waitingUsers.push(socketId);
         }
@@ -104,7 +101,7 @@ function leaveCurrentChat(socketId) {
     if (partnerSocketId && users[partnerSocketId]) {
         io.to(partnerSocketId).emit('partnerLeft', { message: "Your chat partner left. Finding a new match..." });
         delete engagedUsers[partnerSocketId];
-        matchUser(partnerSocketId); // Re-match the partner
+        matchUser(partnerSocketId);
     }
 
     delete engagedUsers[socketId];
