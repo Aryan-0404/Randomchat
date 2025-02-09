@@ -7,9 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
-    maxHttpBufferSize: 10e6 // 5 MB
-});
+const io = socketIo(server);
 
 
 // MongoDB connection
@@ -59,10 +57,9 @@ io.on('connection', (socket) => {
     socket.on('sendImage', (data) => {
         const partnerSocketId = engagedUsers[socket.id];
         if (partnerSocketId && users[partnerSocketId]) {
-            io.to(partnerSocketId).emit('receiveImage', {
-                from: users[socket.id].username,
-                image: data.image, // Base64-encoded image
-            });
+            io.to(partnerSocketId).emit('receiveImage', { from: users[socket.id].username, image: data.image });
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log(`❌ User disconnected: ${socket.id}`);
