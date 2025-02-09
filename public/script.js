@@ -61,7 +61,7 @@ messageInput.addEventListener('keypress', (event) => {
 imageInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file && partnerSocketId) {
-        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        if (file.size > 20 * 1024 * 1024) { // 5MB limit
             alert("Image is too large. Max size is 5MB.");
             return;
         }
