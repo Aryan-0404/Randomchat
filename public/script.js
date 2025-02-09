@@ -61,6 +61,10 @@ messageInput.addEventListener('keypress', (event) => {
 imageInput.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file && partnerSocketId) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            alert("Image is too large. Max size is 5MB.");
+            return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
             const imageData = e.target.result;
@@ -123,5 +127,5 @@ function appendImage(from, imageData) {
     container.innerText = `${from}: `;
     container.appendChild(imageElement);
     chatBox.appendChild(container);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
